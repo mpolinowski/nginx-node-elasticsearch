@@ -1,17 +1,12 @@
 # Using NGINX as proxy for your nodejs apps
 **We want to set up NGINX with http/2 to serve multiple node apps and an instance of Elasticsearch on a single centOS server**
 
-1. [Install Node.js and Express.js to develop our Web Application](#1-install-nodejs-and-expressjs-to-serve-our-web-application)
-2. [Preparing the Site Structure](#2-preparing-the-site-structure)
-3. [Import JSON Elements](#3-import-json-elements)
-4. [Install and Configure Gulp.js](#4-install-and-configure-gulpjs)
-5. [Install NGINX on CentOS](#5-install-nginx-on-a-centos-7-web-server)
-6. [Install Node.js on CentOS](#6-install-nodejs-on-a-centos-7-web-server)
-7. [Clone Repo from Git](#7-clone-repo-from-git)
-8. [Run the app as a service (PM2)](#8-run-the-app-as-a-service-pm2)
-9. [Install Java](#9-install-java)
-10. [Install Elasticsearch](#10-install-elasticsearch)
-11. [Install Kibana](#11-install-kibana)
+1. [Useful Links](#1-useful-links)
+2. [Install Nginx and Adjust the Firewall](#2-install-nginx-and-adjust-the-firewall)
+3. [FirewallD](#3-firewalld)
+4. [Create a login](#4-create-a-login)
+5. [nginx.conf](#5-nginxconf)
+6. [virtual.conf](#6-virtualconf)
 
 
 ### 1 Useful links
