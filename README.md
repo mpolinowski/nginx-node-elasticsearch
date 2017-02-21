@@ -52,21 +52,13 @@ ___
  sudo systemctl enable nginx
 ```
 
-* **Step Six** — Open ports 80 and 443 in [FirewallD](http://www.firewalld.org/)
-
-```
-sudo firewall-cmd --add-service=http
-sudo firewall-cmd --add-service=https
-sudo firewall-cmd --runtime-to-permanent
-```
-
 
 ### 3 FirewallD
 ___
 
 * **Step One** — Installation
 
-FirewallD is included by default with CentOS 7 and Fedora 20+ but it's inactive. Controlling it is the same as with other systemd units.
+Open ports 80 and 443 in [FirewallD](http://www.firewalld.org/)
 
 To start the service and enable FirewallD on boot:
 
