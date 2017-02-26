@@ -109,6 +109,32 @@ sudo firewall-cmd --zone=public --add-port=12345/tcp --permanent
 sudo firewall-cmd --zone=public --remove-port=12345/tcp --permanent
 ```
 
+Verify open ports:
+
+```
+firewall-cmd --list-ports
+```
+
+Check the firewall status:
+
+```
+sudo firewall-cmd --state
+```
+
+To view the status of the FirewallD daemon:
+
+```
+sudo systemctl status firewalld
+```
+
+To reload a FirewallD configuration:
+
+```
+sudo firewall-cmd --reload
+```
+
+
+
 
 ### 4 Create a login
 ___
