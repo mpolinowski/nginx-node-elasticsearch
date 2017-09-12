@@ -428,7 +428,7 @@ To complete the configuration you have to make sure your NGINX config points to 
 ```
 # adding the SSL Certificates
   ssl_prefer_server_ciphers on;
-	ssl_ciphers EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;
+  ssl_ciphers EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;
 	ssl_certificate /etc/nginx/ssl/example.com.chained.crt;
 	ssl_certificate_key /etc/nginx/ssl/example.com.key;
 ```
