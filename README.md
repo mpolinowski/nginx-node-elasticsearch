@@ -7,6 +7,7 @@
 4. [Create a login](#4-create-a-login)
 5. [nginx.conf](#5-nginxconf)
 6. [virtual.conf](#6-virtualconf)
+7. [GoDaddy Certs](#7-godaddy-certs)
 
 
 ### 1 Useful links
@@ -371,4 +372,75 @@ server {
 	}
 
 }
+```
+
+
+### 7 GoDaddy Certs
+
+When you ordered a wildcard certificate from goDaddy you will receive two files: Your SSL Certificate with a random name (Ex. 93rfs8dhf834hts.crt) and the GoDaddy intermediate certificate bundle (gd_bundle-g2-g1.crt). Lets install them on our server.
+
+
+#### Generate a CSR and Private Key
+
+Create a folder to put all our ssl certificates:
+
+```
+mkdir /etc/nginx/ssl
+cd /etc/nginx/ssl
+```
+
+Generate our private key, called example.com.key, and a CSR, called example.com.csr:
+
+```
+openssl req -newkey rsa:2048 -nodes -keyout example.com.key -out example.com.csr
+```
+
+At this point, you will be prompted for several lines of information that will be included in your certificate request. The most important part is the Common Name field which should match the name that you want to use your certificate with — for example, example.com, www.example.com, or (for a wildcard certificate request) [STAR].example.com.
+
+
+#### Download your key from GoDaddy
+
+The files you receive will look something like this:
+
+- 93rfs8dhf834hts.crt
+- gd_bundle-g2-g1.crt
+
+Upload both to /etc/nginx/ssl directory and rename the first one to your domain name example.com.cst
+
+
+#### Install Certificate On Web Server
+
+You can use the following command to create a combined file from both GoDaddy files called example.com.chained.crt:
+
+```
+cat example.com.crt intermediate.crt > example.com.chained.crt
+```
+
+And now you should change the access permission to this folder:
+
+```
+cd /etc/nginx
+sudo chmod -R 600 ssl/
+```
+
+To complete the configuration you have to make sure your NGINX config points to the right cert file and to the private key you generated earlier. Add the following lines inside the server block of your NGINX config:
+
+```
+# adding the SSL Certificates
+  ssl_prefer_server_ciphers on;
+	ssl_ciphers EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;
+	ssl_certificate /etc/nginx/ssl/example.com.chained.crt;
+	ssl_certificate_key /etc/nginx/ssl/example.com.key;
+```
+
+Always test your configuration first:
+
+```
+nginx -t
+```
+
+and then reload:
+
+```
+service nginx reload
 ```
