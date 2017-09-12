@@ -413,7 +413,7 @@ Upload both to /etc/nginx/ssl directory and rename the first one to your domain 
 You can use the following command to create a combined file from both GoDaddy files called example.com.chained.crt:
 
 ```
-cat example.com.crt intermediate.crt > example.com.chained.crt
+cat example.com.crt gd_bundle-g2-g1.crt > example.com.chained.crt
 ```
 
 And now you should change the access permission to this folder:
