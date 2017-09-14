@@ -8,9 +8,10 @@
 5. [nginx.conf](#5-nginxconf)
 6. [virtual.conf](#6-virtualconf)
 7. [GoDaddy Certs](#7-godaddy-certs)
+8. [LetsEncrypt and Certbot](#8-letsencrypt-and-certbot)
 
 
-### 1 Useful links
+## 1 Useful links
 ___
 
 * [Apache2-Utils](https://kyup.com/tutorials/set-http-authentication-nginx/)
@@ -20,7 +21,7 @@ ___
 
 
 
-### 2 Install Nginx and Adjust the Firewall
+## 2 Install Nginx and Adjust the Firewall
 ___
 
 * **Step One** — Nginx is not available in CentOS's default repositories - but we can install it from the EPEL (extra packages for Enterprise Linux) repository.
@@ -54,7 +55,7 @@ ___
 ```
 
 
-### 3 FirewallD
+## 3 FirewallD
 ___
 
 * **Step One** — Installation
@@ -137,7 +138,7 @@ sudo firewall-cmd --reload
 
 
 
-### 4 Create a login
+## 4 Create a login
 ___
 
 ```
@@ -147,7 +148,7 @@ Re-type new password: xxxxxxxxx
 ```
 
 
-### 5 nginx.conf
+## 5 nginx.conf
 
 /etc/nginx/nginx.conf
 
@@ -203,7 +204,7 @@ http {
 ```
 
 
-### 6 virtual.conf
+## 6 virtual.conf
 
 /etc/nginx/conf.d/virtual.conf
 
@@ -375,12 +376,12 @@ server {
 ```
 
 
-### 7 GoDaddy Certs
+## 7 GoDaddy Certs
 
 When you ordered a wildcard certificate from goDaddy you will receive two files: Your SSL Certificate with a random name (Ex. 93rfs8dhf834hts.crt) and the GoDaddy intermediate certificate bundle (gd_bundle-g2-g1.crt). Lets install them on our server.
 
 
-#### Generate a CSR and Private Key
+### Generate a CSR and Private Key
 
 Create a folder to put all our ssl certificates:
 
@@ -398,7 +399,7 @@ openssl req -newkey rsa:2048 -nodes -keyout example.com.key -out example.com.csr
 At this point, you will be prompted for several lines of information that will be included in your certificate request. The most important part is the Common Name field which should match the name that you want to use your certificate with — for example, example.com, www.example.com, or (for a wildcard certificate request) [STAR].example.com.
 
 
-#### Download your key from GoDaddy
+### Download your key from GoDaddy
 
 The files you receive will look something like this:
 
@@ -408,7 +409,7 @@ The files you receive will look something like this:
 Upload both to /etc/nginx/ssl directory and rename the first one to your domain name example.com.cst
 
 
-#### Install Certificate On Web Server
+### Install Certificate On Web Server
 
 You can use the following command to create a combined file from both GoDaddy files called example.com.chained.crt:
 
@@ -446,9 +447,9 @@ service nginx reload
 ```
 
 
-### LetsEncrypt and Certbot
+## 8 LetsEncrypt and Certbot
 
-#### Install Certbot on CentOS 7
+### Install Certbot on CentOS 7
 
 **yum install certbot-nginx**
 
@@ -470,7 +471,7 @@ Install  1 Package (+1 Dependent package)
 Complete!
 ```
 
-#### Run Certbot
+### Run Certbot
 
 **certbot --nginx -d wiki.instar.fr**
 
@@ -528,7 +529,7 @@ IMPORTANT NOTES:
    making regular backups of this folder is ideal.
 ```
 
-#### Setting Up Auto Renewal
+### Setting Up Auto Renewal
 
 Add Certbot renewal to Cron.d in /etc/cron.de - we want to run it twice daily at 13:22 and 04:17:
 
