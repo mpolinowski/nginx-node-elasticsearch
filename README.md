@@ -444,3 +444,104 @@ and then reload:
 ```
 service nginx reload
 ```
+
+
+### LetsEncrypt and Certbot
+
+#### Install Certbot on CentOS 7
+
+**yum install certbot-nginx**
+
+```
+Dependencies Resolved
+
+==============================================================================================
+ Package                         Arch             Version                Repository      Size
+==============================================================================================
+Installing:
+ python2-certbot-nginx           noarch           0.14.1-1.el7           epel            52 k
+Installing for dependencies:
+ pyparsing                       noarch           1.5.6-9.el7            base            94 k
+
+Transaction Summary
+==============================================================================================
+Install  1 Package (+1 Dependent package)
+
+Complete!
+```
+
+#### Run Certbot
+
+**certbot --nginx -d wiki.instar.fr**
+
+```
+Saving debug log to /var/log/letsencrypt/letsencrypt.log
+Enter email address (used for urgent renewal and security notices) (Enter 'c' to
+cancel):
+```
+
+**myemail@email.com**
+```
+-------------------------------------------------------------------------------
+Please read the Terms of Service at
+https://letsencrypt.org/documents/LE-SA-v1.1.1-August-1-2016.pdf. You must agree
+in order to register with the ACME server at
+https://acme-v01.api.letsencrypt.org/directory
+-------------------------------------------------------------------------------
+```
+
+**(A)gree/(C)ancel: A**
+
+```
+Starting new HTTPS connection (1): supporters.eff.org
+Obtaining a new certificate
+Performing the following challenges:
+tls-sni-01 challenge for wiki.instar.fr
+Waiting for verification...
+Cleaning up challenges
+Deployed Certificate to VirtualHost /etc/nginx/conf.d/virtual.conf for set(['wiki.instar.fr'])
+
+Please choose whether HTTPS access is required or optional.
+-------------------------------------------------------------------------------
+1: Easy - Allow both HTTP and HTTPS access to these sites
+2: Secure - Make all requests redirect to secure HTTPS access
+-------------------------------------------------------------------------------
+Select the appropriate number [1-2] then [enter] (press 'c' to cancel): 2
+The appropriate server block is already redirecting traffic. To enable redirect anyway, uncomment the redirect lines in /etc/nginx/conf.d/virtual.conf.
+-------------------------------------------------------------------------------
+Congratulations! You have successfully enabled https://wiki.instar.fr
+-------------------------------------------------------------------------------
+```
+
+```
+IMPORTANT NOTES:
+ - Congratulations! Your certificate and chain have been saved at
+   /etc/letsencrypt/live/wiki.instar.fr/fullchain.pem. Your cert will
+   expire on 2017-12-13. To obtain a new or tweaked version of this
+   certificate in the future, simply run certbot again with the
+   "certonly" option. To non-interactively renew *all* of your
+   certificates, run "certbot renew"
+ - Your account credentials have been saved in your Certbot
+   configuration directory at /etc/letsencrypt. You should make a
+   secure backup of this folder now. This configuration directory will
+   also contain certificates and private keys obtained by Certbot so
+   making regular backups of this folder is ideal.
+```
+
+#### Setting Up Auto Renewal
+
+Add Certbot renewal to Cron.d in /etc/cron.de - we want to run it twice daily at 13:22 and 04:17:
+
+```
+# Example of job definition:
+# .---------------- minute (0 - 59)
+# |  .------------- hour (0 - 23)
+# |  |  .---------- day of month (1 - 31)
+# |  |  |  .------- month (1 - 12) OR jan,feb,mar,apr ...
+# |  |  |  |  .---- day of week (0 - 6) (Sunday=0 or 7) OR sun,mon,tue,wed,thu,fri,sat
+# |  |  |  |  |
+# *  *  *  *  * user-name command to be executed
+
+17 4 * * * /usr/bin/certbot renew --quiet
+22 13 * * * /usr/bin/certbot renew --quiet
+```
