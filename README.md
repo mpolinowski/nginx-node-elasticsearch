@@ -1,14 +1,27 @@
 # Using NGINX as proxy for your nodejs apps
 **We want to set up NGINX with http/2 to serve multiple node apps and an instance of Elasticsearch on a single centOS server**
 
-1. [Useful Links](#1-useful-links)
-2. [Install Nginx and Adjust the Firewall](#2-install-nginx-and-adjust-the-firewall)
-3. [FirewallD](#3-firewalld)
-4. [Create a login](#4-create-a-login)
-5. [nginx.conf](#5-nginxconf)
-6. [virtual.conf](#6-virtualconf)
-7. [GoDaddy Certs](#7-godaddy-certs)
-8. [LetsEncrypt and Certbot](#8-letsencrypt-and-certbot)
+<!-- TOC -->
+
+- [Using NGINX as proxy for your nodejs apps](#using-nginx-as-proxy-for-your-nodejs-apps)
+  - [1 Useful links](#1-useful-links)
+  - [2 Install Nginx and Adjust the Firewall](#2-install-nginx-and-adjust-the-firewall)
+  - [3 FirewallD](#3-firewalld)
+  - [4 Create a login](#4-create-a-login)
+  - [5 nginx.conf](#5-nginxconf)
+  - [6 virtual.conf](#6-virtualconf)
+  - [7 GoDaddy Certs](#7-godaddy-certs)
+    - [Generate a CSR and Private Key](#generate-a-csr-and-private-key)
+    - [Download your key from GoDaddy](#download-your-key-from-godaddy)
+    - [Install Certificate On Web Server](#install-certificate-on-web-server)
+  - [8 LetsEncrypt and Certbot](#8-letsencrypt-and-certbot)
+    - [Install Certbot on CentOS 7](#install-certbot-on-centos-7)
+    - [Run Certbot](#run-certbot)
+    - [Setting Up Auto Renewal](#setting-up-auto-renewal)
+      - [Systemd](#systemd)
+      - [Cron.d](#crond)
+
+<!-- /TOC -->
 
 
 ## 1 Useful links
@@ -531,6 +544,47 @@ IMPORTANT NOTES:
 ```
 
 ### Setting Up Auto Renewal
+
+
+#### Systemd
+
+Go to _/etc/systemd/system/_ and create the following two files
+
+_certbot-nginx.service_
+```
+[Unit]
+Description=Renew Certbot certificates (nginx)
+After=network-online.target
+
+[Service]
+Type=oneshot
+ExecStart=/usr/bin/certbot-2 renew --deploy-hook "systemctl reload nginx"
+```
+
+_certbot-nginx.timer_
+```
+[Unit]
+Description=Renew Certbot certificate (nginx)
+
+[Timer]
+OnCalendar=daily
+Persistent=true
+RandomizedDelaySec=86400
+
+[Install]
+WantedBy=multi-user.target
+```
+
+Now activate the service
+
+```
+$ systemctl daemon-reload
+$ systemctl start certbot-nginx.service  # to run manually
+$ systemctl enable --now certbot-nginx.timer  # to use the timer
+```
+
+
+#### Cron.d
 
 Add Certbot renewal to Cron.d in /etc/cron.de - we want to run it twice daily at 13:22 and 04:17:
 
