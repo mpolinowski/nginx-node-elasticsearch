@@ -586,7 +586,7 @@ $ systemctl enable --now certbot-nginx.timer  # to use the timer
 
 #### Cron.d
 
-Add Certbot renewal to Cron.d in /etc/cron.de - we want to run it twice daily at 13:22 and 04:17:
+Add Certbot renewal to Cron.d in /etc/cron.d - we want to run it twice daily at 13:22 and 04:17:
 
 ```
 # Example of job definition:
@@ -598,6 +598,6 @@ Add Certbot renewal to Cron.d in /etc/cron.de - we want to run it twice daily at
 # |  |  |  |  |
 # *  *  *  *  * user-name command to be executed
 
-17 4 * * * /usr/bin/certbot renew --quiet
-22 13 * * * /usr/bin/certbot renew --quiet
+17 4 * * * /usr/bin/certbot-2 renew --quiet
+22 13 * * * /usr/bin/certbot-2 renew --quiet
 ```
