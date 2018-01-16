@@ -20,6 +20,7 @@
     - [Setting Up Auto Renewal](#setting-up-auto-renewal)
       - [Systemd](#systemd)
       - [Cron.d](#crond)
+    - [TLS-SNI-01 challenge Deactivated](#tls-sni-01-challenge-deactivated)
 
 <!-- /TOC -->
 
@@ -601,3 +602,83 @@ Add Certbot renewal to Cron.d in /etc/cron.d - we want to run it twice daily at 
 17 4 * * * /usr/bin/certbot-2 renew --quiet
 22 13 * * * /usr/bin/certbot-2 renew --quiet
 ```
+
+### TLS-SNI-01 challenge Deactivated
+
+If you are receiving the following error when trying to add a certificate to your domain:
+
+```
+Client with the currently selected authenticator does not support any combination of challenges that will satisfy the CA.
+```
+
+Follow the Instructions given [here](https://community.letsencrypt.org/t/solution-client-with-the-currently-selected-authenticator-does-not-support-any-combination-of-challenges-that-will-satisfy-the-ca/49983) and if you’re serving files for that domain out of a directory on that server, you can run the following command:
+
+```
+sudo certbot --authenticator webroot --webroot-path <path to served directory> --installer nginx -d <domain>
+```
+
+If you’re not serving files out of a directory on the server, you can temporarily stop your server while you obtain the certificate and restart it after Certbot has obtained the certificate. This would look like:
+
+```
+sudo certbot --authenticator standalone --installer nginx -d <domain> --pre-hook "service nginx stop" --post-hook "service nginx start"
+```
+
+e.g.
+
+1. Create your virtual server conf - the given config below routes an node/express app running on localhost:7777 with a public directory in /opt/mysite-build/app :
+
+```
+server {
+       listen         80;
+       listen    [::]:80;
+       server_name    my.domain.com;
+       return         301 https://$server_name$request_uri;
+}
+
+upstream app_test {
+	# point to the running node
+	server 127.0.0.1:7777;
+}
+
+server {
+	listen 443 ssl http2;
+	listen [::]:443 ssl http2;
+	server_name my.domain.com;
+	
+	# set the default public directory for your node
+	root /opt/mysite-build/app;
+	
+	# Optimizing Nginx for Best Performance
+	ssl_session_cache shared:SSL:5m;
+    ssl_session_timeout 1h;
+	
+	location / {
+    	proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+    	proxy_set_header Host $http_host;
+    	proxy_set_header X-NginX-Proxy true;
+    	proxy_http_version 1.1;
+    	proxy_set_header Upgrade $http_upgrade;
+    	proxy_set_header Connection "upgrade";
+    	proxy_max_temp_file_size 0;
+		proxy_pass http://wiki2_test;
+    	proxy_redirect off;
+    	proxy_read_timeout 240s;
+	}
+	
+	# use NGINX to cache static resources that are requested regularly
+	location ~* \.(css|js|jpg|png|ico)$ {
+		expires 168h;
+	}
+
+}
+```
+
+Test your your site by opening my.domain.com inside your browser - you should be automatically redirected to https://my.domain.com and be given a certificate warning. Click to proceed anyway to access your site.
+
+Now run:
+
+```
+sudo certbot --authenticator webroot --webroot-path /opt/mysite-build/app --installer nginx -d my.domain.com
+```
+
+certbot will modify your NGINX config automatically!
