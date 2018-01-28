@@ -46,6 +46,9 @@ ___
 * [Set up NGINX with http/2](https://www.digitalocean.com/community/tutorials/how-to-set-up-nginx-with-http-2-support-on-ubuntu-16-04)
 * [Create a self-signed Certificate](https://www.digitalocean.com/community/tutorials/how-to-create-a-self-signed-ssl-certificate-for-nginx-on-centos-7/)
 * [How To Secure Nginx with Let's Encrypt on CentOS 7](https://www.digitalocean.com/community/tutorials/how-to-secure-nginx-with-let-s-encrypt-on-centos-7)
+* [Installing Elasticsearch](https://www.elastic.co/guide/en/elasticsearch/reference/current/install-elasticsearch.html)
+* [Installing Kibana](https://www.elastic.co/guide/en/kibana/current/install.html)
+* [Installing X-Pack](https://www.elastic.co/downloads/x-pack)
 
 
 
