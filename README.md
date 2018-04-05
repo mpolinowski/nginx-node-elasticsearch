@@ -183,7 +183,7 @@ Re-type new password: xxxxxxxxx
 
 /etc/nginx/nginx.conf
 
-```
+```nginx
 user nginx;
 worker_processes 8;
 error_log /var/log/nginx/error.log;
@@ -241,7 +241,7 @@ http {
 
 Set up virtual server instances for our 2 node/express apps, Elasticsearch and Kibana
 
-```
+```nginx
 # redirect http/80 traffic to https/443 for our node apps
 server {
        listen         80;
@@ -457,7 +457,7 @@ sudo chmod -R 600 ssl/
 
 To complete the configuration you have to make sure your NGINX config points to the right cert file and to the private key you generated earlier. Add the following lines inside the server block of your NGINX config:
 
-```
+```nginx
 # adding the SSL Certificates
   ssl_prefer_server_ciphers on;
   ssl_ciphers EECDH+CHACHA20:EECDH+AES128:RSA+AES128:EECDH+AES256:RSA+AES256:EECDH+3DES:RSA+3DES:!MD5;
@@ -643,7 +643,7 @@ e.g.
 
 1. Create your virtual server conf - the given config below routes an node/express app running on localhost:7777 with a public directory in /opt/mysite-build/app :
 
-```
+```nginx
 server {
        listen         80;
        listen    [::]:80;
@@ -775,7 +775,7 @@ Elasticsearch loads its configuration from the _/etc/elasticsearch/elasticsearch
 * __network.host:__ _localhost_ [see config](https://www.elastic.co/guide/en/elasticsearch/reference/current/modules-network.html#network-interface-values) __*__
 * __http.port:__ _9200_
 * __http.cors:__ _enabled:_ true , _allow-origin:_ /https?:\/\/localhost(:[0-9]+)?/, _allow-origin:_ /https?:\/\/localhost(:[0-9][0-9][0-9][0-9])?/
-* __*__ _e.g. network.host: 127.0.0.1, 192.168.1.200, 7.114.21.49_
+__*__ _e.g. network.host: 127.0.0.1, 192.168.1.200, 7.114.21.49_
 
 
 The RPM places config files, logs, and the data directory in the appropriate locations for an RPM-based system:
@@ -969,5 +969,17 @@ https://github.com/elastic/ansible-elasticsearch
 
 https://www.elastic.co/blog/deploying-elasticsearch-200-with-chef
 
+http://ikeptwalking.com/authentication-elasticsearch-without-shield-x-pack/
 
+https://readonlyrest.com/download.html
+
+https://github.com/sscarduzio/elasticsearch-readonlyrest-plugin
+
+https://docs.search-guard.com/latest/kibana-plugin-installation.html
+
+https://docs.chef.io/elasticsearch_and_kibana_auth.html
+
+https://qbox.io/blog/how-to-lock-down-elasticsearch-kibana-logstash-maintain-security
+
+https://mapr.com/blog/how-secure-elasticsearch-and-kibana/
 
